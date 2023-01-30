@@ -12,27 +12,29 @@ from dotenv import load_dotenv
 import datetime
 import os
 
-TERMNINAL_ID = os.environ.get("TERMINAL_ID")
-CP_IP = os.environ.get("CP_IP")
-CP_PORT = os.environ.get("CP_PORT")
-
-CHANNEL_NAME = os.environ.get("CHANNEL_NAME")
-
-PLAIN_USER = os.environ.get("PLAIN_USER")
-PLAIN_PASS = os.environ.get("PLAIN_PASS")
-
 load_dotenv()
-credentials = pika.PlainCredentials(PLAIN_USER, PLAIN_PASS)
+
+TERMNINAL_ID = os.environ.get("TERMINAL_ID")
+RABBIT_IP = os.environ.get("RABBIT_IP")
+RABBIT_PORT = os.environ.get("RABBIT_PORT")
+
+RABBIT_VHOST = os.environ.get("RABBIT_VHOST")
+
+RABBIT_USER = os.environ.get("RABBIT_USER")
+RABBIT_PASS = os.environ.get("RABBIT_PASS")
+
+
+credentials = pika.PlainCredentials(RABBIT_USER, RABBIT_PASS)
 parameters = pika.ConnectionParameters(
-    CP_IP,
-    CP_PORT,
-    CHANNEL_NAME,
+    RABBIT_IP,
+    RABBIT_PORT,
+    RABBIT_VHOST,
     credentials
 )
 connection = pika.BlockingConnection(parameters)
 
 channel = connection.channel()
-channel.queue_declare(CHANNEL_NAME)
+channel.queue_declare("pogoda")
 
 
 def bme280():
